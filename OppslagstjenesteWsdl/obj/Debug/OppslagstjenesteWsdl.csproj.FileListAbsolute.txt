@@ -1,0 +1,5 @@
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\OppslagstjenesteWsdl\bin\Debug\OppslagstjenesteWsdl.dll.config
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\OppslagstjenesteWsdl\bin\Debug\OppslagstjenesteWsdl.dll
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\OppslagstjenesteWsdl\bin\Debug\OppslagstjenesteWsdl.pdb
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\OppslagstjenesteWsdl\obj\Debug\OppslagstjenesteWsdl.dll
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\OppslagstjenesteWsdl\obj\Debug\OppslagstjenesteWsdl.pdb

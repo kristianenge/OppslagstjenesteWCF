@@ -1,0 +1,9 @@
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\bin\Debug\TestKlient.exe.config
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\bin\Debug\TestKlient.exe
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\bin\Debug\TestKlient.pdb
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\bin\Debug\OppslagstjenesteWsdl.dll
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\bin\Debug\OppslagstjenesteWsdl.pdb
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\obj\Debug\TestKlient.csprojResolveAssemblyReference.cache
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\obj\Debug\TestKlient.exe
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\obj\Debug\TestKlient.pdb
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\bin\Debug\ApiClientShared.dll
