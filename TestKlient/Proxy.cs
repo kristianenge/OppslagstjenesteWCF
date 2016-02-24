@@ -42,13 +42,13 @@ namespace TestKlient
         private static CustomBinding CreateCustomBinding(EndpointAddress address)
         {
             CustomBinding binding = new CustomBinding();
-            SymmetricSecurityBindingElement ssbe =
-                SecurityBindingElement.CreateSslNegotiationBindingElement(true);
+            AsymmetricSecurityBindingElement  ssbe =
+                SecurityBindingElement.CreateMutualCertificateDuplexBindingElement(MessageSecurityVersion.Default);
             
             ssbe.DefaultAlgorithmSuite = SecurityAlgorithmSuite.Basic128Sha256Rsa15;
             ssbe.IncludeTimestamp = true;
-            ssbe.KeyEntropyMode = SecurityKeyEntropyMode.ServerEntropy;
-            ssbe.MessageSecurityVersion = MessageSecurityVersion.WSSecurity11WSTrust13WSSecureConversation13WSSecurityPolicy12;
+            ssbe.KeyEntropyMode = SecurityKeyEntropyMode.CombinedEntropy;
+          //  ssbe.MessageSecurityVersion = MessageSecurityVersion.WSSecurity11WSTrust13WSSecureConversation13WSSecurityPolicy12;
             ssbe.SecurityHeaderLayout = SecurityHeaderLayout.LaxTimestampLast;
 
             X509SecurityTokenParameters endpointSupportingTokenParametersTokenParams = new X509SecurityTokenParameters();
@@ -67,7 +67,7 @@ namespace TestKlient
             ProtectionTokenParametersTokenParams.ReferenceStyle = SecurityTokenReferenceStyle.Internal;
             ProtectionTokenParametersTokenParams.RequireDerivedKeys = false;
             ProtectionTokenParametersTokenParams.X509ReferenceStyle = X509KeyIdentifierClauseType.Thumbprint;
-            ssbe.ProtectionTokenParameters = ProtectionTokenParametersTokenParams;
+          //  ssbe.ProtectionTokenParameters = ProtectionTokenParametersTokenParams;
             
 
             TextMessageEncodingBindingElement tmee = new TextMessageEncodingBindingElement();
