@@ -31,6 +31,7 @@ namespace TestKlient
         {
 
             var client = Proxy.GetClient();
+            client.ChannelFactory.Endpoint.Behaviors.Add(new InspectorBehavior());
             try
             {
                 var hentPersonRequest = HentPersonerRequest();
@@ -38,8 +39,9 @@ namespace TestKlient
             }
             catch (Exception exception)
             {
-                
-                throw;
+
+                if (exception.InnerException == null) Trace.WriteLine(exception.Message);
+                else Trace.WriteLine(exception.InnerException);
             }
             
         }
@@ -50,7 +52,7 @@ namespace TestKlient
 
             var proxyClient = new oppslagstjeneste1602Client("oppslagstjeneste_ver2_v6");
             proxyClient.Endpoint.Binding.CloseTimeout = proxyClient.Endpoint.Binding.OpenTimeout = proxyClient.Endpoint.Binding.ReceiveTimeout = proxyClient.Endpoint.Binding.SendTimeout = TimeSpan.FromMinutes(1);
-            //proxyClient.ChannelFactory.Endpoint.Behaviors.Add(new InspectorBehavior());
+            proxyClient.ChannelFactory.Endpoint.Behaviors.Add(new InspectorBehavior());
             
             
             try
