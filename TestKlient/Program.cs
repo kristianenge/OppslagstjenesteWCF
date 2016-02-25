@@ -22,12 +22,13 @@ namespace TestKlient
 
         {
                 
-            alternativ2();
+            alternativ1();
 
         }
 
         public static void alternativ2()
         {
+
             var client = Proxy.GetClient();
             try
             {
