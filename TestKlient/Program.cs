@@ -23,7 +23,7 @@ namespace TestKlient
 
         {
                 
-            alternativ1();
+            alternativ2();
 
         }
 
