@@ -52,17 +52,16 @@ namespace TestKlient
         private static CustomBinding CreateCustomBinding(EndpointAddress address)
         {
             CustomBinding binding = new CustomBinding();
-            SecurityBindingElement  ssbe =
-                SecurityBindingElement.CreateMutualCertificateBindingElement(MessageSecurityVersion.Default);
+            AsymmetricSecurityBindingElement asbe =
+                (AsymmetricSecurityBindingElement)SecurityBindingElement.CreateMutualCertificateBindingElement(MessageSecurityVersion.WSSecurity10WSTrustFebruary2005WSSecureConversationFebruary2005WSSecurityPolicy11BasicSecurityProfile10);
             
-            ssbe.DefaultAlgorithmSuite = SecurityAlgorithmSuite.Basic128Sha256Rsa15;
-            ssbe.IncludeTimestamp = true;
-            ssbe.KeyEntropyMode = SecurityKeyEntropyMode.CombinedEntropy;
+            asbe.DefaultAlgorithmSuite = SecurityAlgorithmSuite.Basic128Sha256Rsa15;
+            asbe.IncludeTimestamp = true;
+            asbe.KeyEntropyMode = SecurityKeyEntropyMode.CombinedEntropy;
           //  ssbe.MessageSecurityVersion = MessageSecurityVersion.WSSecurity11WSTrust13WSSecureConversation13WSSecurityPolicy12;
-            ssbe.SecurityHeaderLayout = SecurityHeaderLayout.LaxTimestampLast;
+            asbe.SecurityHeaderLayout = SecurityHeaderLayout.LaxTimestampLast;
            // ssbe.RequireSignatureConfirmation = false;
-           // ssbe.MessageProtectionOrder = MessageProtectionOrder.SignBeforeEncryptAndEncryptSignature;
-            
+            asbe.MessageProtectionOrder = MessageProtectionOrder.SignBeforeEncrypt;
 
             X509SecurityTokenParameters endpointSupportingTokenParametersTokenParams = new X509SecurityTokenParameters();
             endpointSupportingTokenParametersTokenParams.InclusionMode = SecurityTokenInclusionMode.AlwaysToRecipient;
@@ -70,7 +69,7 @@ namespace TestKlient
             endpointSupportingTokenParametersTokenParams.RequireDerivedKeys = false;
             endpointSupportingTokenParametersTokenParams.X509ReferenceStyle = X509KeyIdentifierClauseType.IssuerSerial;
 
-           // ssbe.EndpointSupportingTokenParameters.Signed.Add(endpointSupportingTokenParametersTokenParams);
+            asbe.EndpointSupportingTokenParameters.Signed.Add(endpointSupportingTokenParametersTokenParams);
             
             
 
@@ -116,7 +115,7 @@ namespace TestKlient
            // htbe.UseDefaultWebProxy = true;
             
 
-            binding.Elements.Add(ssbe);
+            binding.Elements.Add(asbe);
             binding.Elements.Add(tmee);
             binding.Elements.Add(htbe);
             return new CustomBinding(binding);

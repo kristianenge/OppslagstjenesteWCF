@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using OppslagstjenesteWsdl.OppslagstjenesteV5;
 using ApiClientShared.Enums;
 using System.ServiceModel.Security.Tokens;
+using System.Diagnostics;
 
 namespace TestKlient
 {
@@ -32,7 +33,8 @@ namespace TestKlient
             var client = Proxy.GetClient();
             try
             {
-                var response = client.HentEndringer(HentEndringerRequest());
+                var hentPersonRequest = HentPersonerRequest();
+                var response = client.HentPersoner(hentPersonRequest);
             }
             catch (Exception exception)
             {
@@ -53,17 +55,28 @@ namespace TestKlient
             
             try
             {
-                var response =  proxyClient.HentEndringer(HentEndringerRequest());
+                var hentPersonRequest = HentPersonerRequest();
+                var response =  proxyClient.HentPersoner(hentPersonRequest);
             }
             catch (Exception exception)
             {
-
-                throw;
+                if (exception.InnerException == null) Trace.WriteLine(exception.Message);
+                else Trace.WriteLine(exception.InnerException);
             }
 
 
 
         }
+
+        private static HentPersonerRequest HentPersonerRequest()
+        {
+            var hentPersonForesp = new HentPersonerForespoersel();
+            hentPersonForesp.informasjonsbehov = new[] {informasjonsbehov.Kontaktinfo};
+            hentPersonForesp.personidentifikator = new[] {"31108446911"};
+            var hentPersonRequest = new HentPersonerRequest(null, hentPersonForesp);
+            return hentPersonRequest;
+        }
+
         private static HentEndringerRequest HentEndringerRequest()
         {
             var endringForespoersel = HentEndringerForespoersel();
