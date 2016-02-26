@@ -58,9 +58,9 @@ namespace TestKlient
             asbe.MessageSecurityVersion = MessageSecurityVersion
                 .WSSecurity10WSTrustFebruary2005WSSecureConversationFebruary2005WSSecurityPolicy11BasicSecurityProfile10;
             asbe.DefaultAlgorithmSuite = SecurityAlgorithmSuite.Basic256Sha256;
-            asbe.IncludeTimestamp = true;
+            asbe.IncludeTimestamp = false;
             asbe.KeyEntropyMode = SecurityKeyEntropyMode.CombinedEntropy;
-            asbe.SecurityHeaderLayout = SecurityHeaderLayout.Lax;
+            asbe.SecurityHeaderLayout = SecurityHeaderLayout.LaxTimestampLast;
             asbe.RequireSignatureConfirmation = false;
             asbe.MessageProtectionOrder = MessageProtectionOrder.SignBeforeEncrypt;
             

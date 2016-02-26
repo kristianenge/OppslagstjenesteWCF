@@ -12,8 +12,8 @@ namespace TestKlient
     public class MyMessageEncodingBindingElement : MessageEncodingBindingElement
     {
         public TextMessageEncodingBindingElement textBE = new TextMessageEncodingBindingElement(MessageVersion.Soap12, Encoding.UTF8);
-        
-        
+
+
         public override MessageEncoderFactory CreateMessageEncoderFactory()
         {
             return new MyMessageEncoderFactory(textBE.CreateMessageEncoderFactory());
@@ -81,17 +81,18 @@ namespace TestKlient
 
         class MyMessageEncoder : MessageEncoder
         {
+
             private readonly MessageEncoder _text;
             public MyMessageEncoder(MessageEncoder text)
             {
-                
+
                 this._text = text;
             }
             // Implementation of MessageEncoder
 
             public override Message ReadMessage(Stream stream, int maxSizeOfHeaders, string contentType)
             {
-                return this._text.ReadMessage(ProcessMemoryStream(stream, false), maxSizeOfHeaders, contentType);
+                return this._text.ReadMessage(ProcessMemoryStream(stream), maxSizeOfHeaders, contentType);
             }
 
             public override Message ReadMessage(ArraySegment<byte> buffer, BufferManager bufferManager, string contentType)
@@ -102,7 +103,7 @@ namespace TestKlient
 
                 MemoryStream stream = new MemoryStream(msgContents);
                 return ReadMessage(stream, int.MaxValue);
-                
+
             }
 
             public override void WriteMessage(Message message, Stream stream)
@@ -119,7 +120,53 @@ namespace TestKlient
             public override string MediaType => _text.MediaType;
             public override MessageVersion MessageVersion => _text.MessageVersion;
 
-            private MemoryStream ProcessMemoryStream(Stream inputStream, bool dispose)
+
+            private MemoryStream ProcessMemoryStream(Stream inputStream)
+            {
+
+                List<string> referenceList = findReferenceId(inputStream);
+
+                return ProcessMemoryStream(inputStream, false, referenceList);
+            }
+            private List<string> findReferenceId(Stream inputStream)
+            {
+                List<string> referenceList = new List<string>();
+                try
+                {
+                    using (var reader = XmlReader.Create(inputStream))
+                    {
+                        while (reader.Read())
+                        {
+
+                            if (reader.LocalName.Equals("Timestamp") && reader.NamespaceURI.Equals("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"))
+                            {
+                                if (reader.HasAttributes)
+                                {
+
+                                    for (int attInd = 0; attInd < reader.AttributeCount; attInd++)
+                                    {
+                                        reader.MoveToAttribute(attInd);
+                                        referenceList.Add(reader.Value);
+                                    }
+                                    // Move the reader back to the element node.
+                                    reader.MoveToElement();
+                                }
+                            }
+                        }
+                        reader.Close();
+                    }
+                    inputStream.Position = 0;
+
+                    return referenceList;
+                }
+                catch (Exception ex)
+                {
+                    // handle error
+                    throw;
+                }
+            }
+
+            private MemoryStream ProcessMemoryStream(Stream inputStream, bool dispose, List<string> referenceList)
             {
                 StreamWriter xmlStream = null;
                 var outputStream = new MemoryStream();
@@ -129,6 +176,7 @@ namespace TestKlient
                     xmlStream = new StreamWriter(outputStream);
                     using (var reader = XmlReader.Create(inputStream))
                     {
+
                         using (
                             var writer = XmlWriter.Create(xmlStream,
                                 new XmlWriterSettings() { ConformanceLevel = ConformanceLevel.Auto }))
@@ -144,12 +192,33 @@ namespace TestKlient
                                         continueFilter = reader.IsStartElement();
                                     }
                                 }
-                                else if (reader.LocalName.Equals("Signature") && reader.NamespaceURI.Equals("http://www.w3.org/2000/09/xmldsig#"))
+                                /*else if (reader.LocalName.Equals("Signature") && reader.NamespaceURI.Equals("http://www.w3.org/2000/09/xmldsig#"))
                                 {
                                     if (!reader.IsEmptyElement)
                                     {
                                         continueFilter = reader.IsStartElement();
                                     }
+                                }*/
+                                else if (reader.LocalName.Equals("Reference"))
+                                {
+                                    if (reader.HasAttributes)
+                                    {
+                                        for (int attInd = 0; attInd < reader.AttributeCount; attInd++)
+                                        {
+                                            reader.MoveToAttribute(attInd);
+                                            foreach (string s in referenceList)
+                                            {
+                                                if (reader.Name == "URI" && reader.Value == "#" + s)
+                                                {
+                                                    continueFilter = reader.IsStartElement();
+
+                                                }
+                                            }
+                                        }
+                                        // Move the reader back to the element node.
+                                        reader.MoveToElement();
+                                    }
+                                    
                                 }
                                 else if (reader.LocalName.Equals("Timestamp") && reader.NamespaceURI.Equals("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"))
                                 {
@@ -160,10 +229,12 @@ namespace TestKlient
                                 }
                                 else if (continueFilter)
                                 {
+
                                     // continue to next node
                                 }
                                 else
                                 {
+                                    Console.WriteLine(reader.Name);
                                     XmlHelper.WriteShallowNode(reader, writer);
                                 }
                             }
@@ -184,6 +255,9 @@ namespace TestKlient
                     if (xmlStream != null && dispose) xmlStream.Dispose();
                 }
             }
+
+            
+
         }
     }
 }
