@@ -1,9 +1,13 @@
-﻿using System;
+﻿using ApiClientShared.Enums;
+using Difi.Felles.Utility.Security;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel.Channels;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -92,7 +96,50 @@ namespace TestKlient
 
             public override Message ReadMessage(Stream stream, int maxSizeOfHeaders, string contentType)
             {
-                return this._text.ReadMessage(ProcessMemoryStream(stream), maxSizeOfHeaders, contentType);
+                
+                var s = ProcessMemoryStream(stream);
+                string fasit;
+                string kanin;
+                
+                StreamReader sr = new StreamReader(stream);
+                
+                //This allows you to do one Read operation.
+                fasit = sr.ReadToEnd();
+                stream.Position = 0;
+               
+
+                var xmldoc = new XmlDocument();
+                xmldoc.PreserveWhitespace = true;
+                xmldoc.Load(stream);
+                MemoryStream xmlStream = new MemoryStream();
+                xmldoc.Save(xmlStream);
+
+                xmlStream.Flush();//Adjust this if you want read your data 
+                xmlStream.Position = 0;
+
+                var candidate = "";
+                using (StreamReader sr2 = new StreamReader(xmlStream))
+                {
+                    //This allows you to do one Read operation.
+                    candidate = sr2.ReadToEnd();
+                }
+                
+                candidate = Regex.Replace(candidate, @" />", "/>");
+
+                MemoryStream editedStream = new MemoryStream();
+                StreamWriter writer = new StreamWriter(editedStream);
+                writer.Write(candidate);
+                writer.Flush();
+                editedStream.Position = 0;
+                
+
+                //XmlDocument sendtDokument, XmlDocument mottattDokument, SoapVersion version, X509Certificate2 xmlDekrypteringsSertifikat = null)
+                // var sertifikat = ApiClientShared.CertificateUtility.SenderCertificate("8702F5E55217EC88CF2CCBADAC290BB4312594AC", Language.Norwegian);
+                // var rv = new Oppslagstjenestevalidator(null,xmldoc, sertifikat);
+                // rv.Valider();
+                //var signedXmlWithAgnosticId = new SignedXmlWithAgnosticId(xmldoc);
+
+                return this._text.ReadMessage(s, maxSizeOfHeaders, contentType);
             }
 
             public override Message ReadMessage(ArraySegment<byte> buffer, BufferManager bufferManager, string contentType)
@@ -121,13 +168,69 @@ namespace TestKlient
             public override MessageVersion MessageVersion => _text.MessageVersion;
 
 
-            private MemoryStream ProcessMemoryStream(Stream inputStream)
+            private Stream ProcessMemoryStream(Stream inputStream)
             {
+                List<string> referenceList = new List<string>();// findReferenceId(inputStream);
 
-                List<string> referenceList = findReferenceId(inputStream);
+                var xmlDoc = new XmlDocument();
+                xmlDoc.PreserveWhitespace = true;
+                xmlDoc.Load(inputStream);
+                inputStream.Position = 0;
+                
 
-                return ProcessMemoryStream(inputStream, false, referenceList);
+               // XmlNode security = xmlDoc.SelectSingleNode("//*[local-name()='Security']"); // apply your xpath here
+
+                XmlNode timestamp = xmlDoc.SelectSingleNode("//*[local-name()='Timestamp']"); // apply your xpath here
+               // referenceList.Add(timestamp.Attributes["wsu:Id"].Value);
+                // timestamp.ParentNode.RemoveChild(timestamp);
+
+                XmlNode signatureConfirmation = xmlDoc.SelectSingleNode("//*[local-name()='SignatureConfirmation']"); // apply your xpath here
+               // referenceList.Add(signatureConfirmation.Attributes["wsu:Id"].Value);
+               // signatureConfirmation.ParentNode.RemoveChild(signatureConfirmation);
+
+                foreach (string s in referenceList)
+                {
+                    XmlNode childNode = xmlDoc.SelectSingleNode("//*[@URI='#"+s+"']"); // apply your xpath here
+                    childNode.ParentNode.RemoveChild(childNode);
+                }
+
+            
+                string raw = xmlDoc.OuterXml;
+                raw = Regex.Replace(raw, @" />", "/>");
+             //   raw = Regex.Replace(raw, @"></wsse11:SignatureConfirmation>", "/>");
+
+                MemoryStream xmlStream = new MemoryStream();
+                xmlDoc.Save(xmlStream);
+
+                xmlStream.Flush();//Adjust this if you want read your data 
+                xmlStream.Position = 0;
+
+                return xmlStream;
+                
             }
+            private void loopthrougStream(Stream inputStream)
+            {
+                try
+                {
+                    using (var reader = XmlReader.Create(inputStream))
+                    {
+                        while (reader.Read())
+                        {
+
+                            Console.WriteLine(reader.Name);
+                        }
+                        reader.Close();
+                    }
+                    inputStream.Position = 0;
+                    
+                }
+                catch (Exception ex)
+                {
+                    // handle error
+                    throw;
+                }
+            }
+
             private List<string> findReferenceId(Stream inputStream)
             {
                 List<string> referenceList = new List<string>();
@@ -137,7 +240,7 @@ namespace TestKlient
                     {
                         while (reader.Read())
                         {
-
+                            
                             if (reader.LocalName.Equals("Timestamp") && reader.NamespaceURI.Equals("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"))
                             {
                                 if (reader.HasAttributes)
@@ -150,6 +253,8 @@ namespace TestKlient
                                     }
                                     // Move the reader back to the element node.
                                     reader.MoveToElement();
+
+                                    
                                 }
                             }
                         }
@@ -183,6 +288,7 @@ namespace TestKlient
                         {
                             while (reader.Read())
                             {
+                                
                                 if (reader.LocalName.Equals("SignatureConfirmation") &&
                                     reader.NamespaceURI.Equals(
                                         "http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd"))
@@ -199,27 +305,6 @@ namespace TestKlient
                                         continueFilter = reader.IsStartElement();
                                     }
                                 }*/
-                                else if (reader.LocalName.Equals("Reference"))
-                                {
-                                    if (reader.HasAttributes)
-                                    {
-                                        for (int attInd = 0; attInd < reader.AttributeCount; attInd++)
-                                        {
-                                            reader.MoveToAttribute(attInd);
-                                            foreach (string s in referenceList)
-                                            {
-                                                if (reader.Name == "URI" && reader.Value == "#" + s)
-                                                {
-                                                    continueFilter = reader.IsStartElement();
-
-                                                }
-                                            }
-                                        }
-                                        // Move the reader back to the element node.
-                                        reader.MoveToElement();
-                                    }
-                                    
-                                }
                                 else if (reader.LocalName.Equals("Timestamp") && reader.NamespaceURI.Equals("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"))
                                 {
                                     if (!reader.IsEmptyElement)
@@ -229,13 +314,52 @@ namespace TestKlient
                                 }
                                 else if (continueFilter)
                                 {
-
+                                    if (!reader.IsEmptyElement && reader.LocalName != "Transforms")
+                                    {
+                                        continueFilter = reader.IsStartElement();
+                                    }
+                                    //Console.WriteLine("skipping:" + reader.Name);
                                     // continue to next node
                                 }
                                 else
                                 {
-                                    Console.WriteLine(reader.Name);
-                                    XmlHelper.WriteShallowNode(reader, writer);
+                                    if (reader.LocalName.Equals("Reference") && reader.HasAttributes)
+                                    {
+                                        bool shouldIgnore = false;
+                                        for (int attInd = 0; attInd < reader.AttributeCount; attInd++)
+                                        {
+                                            reader.MoveToAttribute(attInd);
+                                            foreach (string s in referenceList)
+                                            {
+                                                if (reader.Name == "URI" && reader.Value == "#" + s)
+                                                {
+                                                    // continueFilter = reader.IsStartElement();
+                                                    shouldIgnore = true;
+                                                    if (!reader.IsEmptyElement)
+                                                    {
+                                                        continueFilter = reader.IsStartElement();
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    
+                                                }
+                                                
+                                            }
+                                        }
+                                        // Move the reader back to the element node.
+                                        reader.MoveToElement();
+                                        if (!shouldIgnore)
+                                        {
+                                            Console.WriteLine(reader.Name);
+                                            XmlHelper.WriteShallowNode(reader, writer);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine(reader.Name);
+                                        XmlHelper.WriteShallowNode(reader, writer);
+                                    }
                                 }
                             }
                             writer.Flush();
@@ -243,6 +367,7 @@ namespace TestKlient
                         reader.Close();
                     }
                     outputStream.Position = 0;
+                    inputStream.Position = 0;
                     return outputStream;
                 }
                 catch (Exception ex)

@@ -60,20 +60,22 @@ namespace TestKlient
             asbe.DefaultAlgorithmSuite = SecurityAlgorithmSuite.Basic256Sha256;
             asbe.IncludeTimestamp = false;
             asbe.KeyEntropyMode = SecurityKeyEntropyMode.CombinedEntropy;
-            asbe.SecurityHeaderLayout = SecurityHeaderLayout.LaxTimestampLast;
+            asbe.SecurityHeaderLayout = SecurityHeaderLayout.Lax;
             asbe.RequireSignatureConfirmation = false;
             asbe.MessageProtectionOrder = MessageProtectionOrder.SignBeforeEncrypt;
             
             
 
             var securityElementMutualBinding =
-                SecurityBindingElement.CreateMutualCertificateBindingElement(
+                (AsymmetricSecurityBindingElement)SecurityBindingElement.CreateMutualCertificateBindingElement(
                     MessageSecurityVersion
                         .WSSecurity10WSTrustFebruary2005WSSecureConversationFebruary2005WSSecurityPolicy11BasicSecurityProfile10);
             securityElementMutualBinding.DefaultAlgorithmSuite = SecurityAlgorithmSuite.Basic256Sha256;
-            ((AsymmetricSecurityBindingElement) securityElementMutualBinding).AllowSerializedSigningTokenOnReply = true;
-            ((AsymmetricSecurityBindingElement)securityElementMutualBinding).MessageProtectionOrder = MessageProtectionOrder.SignBeforeEncrypt;
-            
+            securityElementMutualBinding.AllowSerializedSigningTokenOnReply = true;
+            securityElementMutualBinding.MessageProtectionOrder = MessageProtectionOrder.SignBeforeEncryptAndEncryptSignature;
+            securityElementMutualBinding.RequireSignatureConfirmation = true;
+            securityElementMutualBinding.IncludeTimestamp = true;
+            asbe.SecurityHeaderLayout = SecurityHeaderLayout.Lax;
 
             var tmee = new TextMessageEncodingBindingElement();
             tmee.MaxReadPoolSize = 64;
