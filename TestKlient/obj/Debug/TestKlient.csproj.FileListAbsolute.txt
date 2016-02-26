@@ -7,3 +7,6 @@ Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\obj\Debug\TestKl
 Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\obj\Debug\TestKlient.exe
 Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\obj\Debug\TestKlient.pdb
 Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\bin\Debug\ApiClientShared.dll
+C:\Users\krist\Documents\GitHub\OppslagstjenesteWCF\TestKlient\bin\Debug\TestKlient.exe.config
+C:\Users\krist\Documents\GitHub\OppslagstjenesteWCF\TestKlient\obj\Debug\TestKlient.exe
+C:\Users\krist\Documents\GitHub\OppslagstjenesteWCF\TestKlient\obj\Debug\TestKlient.pdb
