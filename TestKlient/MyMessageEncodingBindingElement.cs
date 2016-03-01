@@ -150,7 +150,7 @@ namespace TestKlient
 
                 foreach (string s in referenceList)
                 {
-                    XmlNode childNode = xmlDoc.SelectSingleNode("//*[@URI='#"+s+"']"); // apply your xpath here
+                    XmlNode childNode = xmlDoc.SelectSingleNode("//*[@URI='#"+s+"']");
                     childNode.ParentNode.RemoveChild(childNode);
                 }
 

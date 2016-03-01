@@ -62,18 +62,7 @@ namespace TestKlient
             ((AsymmetricSecurityBindingElement) securityElementMutualBinding).AllowSerializedSigningTokenOnReply = true;
             ((AsymmetricSecurityBindingElement) securityElementMutualBinding).MessageProtectionOrder = MessageProtectionOrder.SignBeforeEncrypt;
             
-
-            var tmee = new TextMessageEncodingBindingElement();
-            tmee.MaxReadPoolSize = 64;
-            tmee.MaxWritePoolSize = 16;
-            tmee.MessageVersion = MessageVersion.Soap12;
-            tmee.WriteEncoding = Encoding.UTF8;
-            tmee.ReaderQuotas.MaxDepth = 32;
-            tmee.ReaderQuotas.MaxStringContentLength = 8192;
-            tmee.ReaderQuotas.MaxArrayLength = 16384;
-            tmee.ReaderQuotas.MaxBytesPerRead = 4096;
-            tmee.ReaderQuotas.MaxNameTableCharCount = 16384;
-
+            
             var tmebe = new MyMessageEncodingBindingElement();
             tmebe.MessageVersion = MessageVersion.Soap12;
             
