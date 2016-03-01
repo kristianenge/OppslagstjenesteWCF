@@ -53,19 +53,7 @@ namespace TestKlient
         private static CustomBinding CreateCustomBinding()
         {
             
-            var asbe =
-                   SecurityBindingElement.CreateMutualCertificateDuplexBindingElement();
-            asbe.MessageSecurityVersion = MessageSecurityVersion
-                .WSSecurity10WSTrustFebruary2005WSSecureConversationFebruary2005WSSecurityPolicy11BasicSecurityProfile10;
-            asbe.DefaultAlgorithmSuite = SecurityAlgorithmSuite.Basic256Sha256;
-            asbe.IncludeTimestamp = true;
-            asbe.KeyEntropyMode = SecurityKeyEntropyMode.CombinedEntropy;
-            asbe.SecurityHeaderLayout = SecurityHeaderLayout.Lax;
-            asbe.RequireSignatureConfirmation = false;
-            asbe.MessageProtectionOrder = MessageProtectionOrder.SignBeforeEncrypt;
-            
-            
-
+         
             var securityElementMutualBinding =
                 SecurityBindingElement.CreateMutualCertificateBindingElement(
                     MessageSecurityVersion

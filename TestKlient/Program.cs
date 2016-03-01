@@ -23,11 +23,11 @@ namespace TestKlient
 
         {
                 
-            alternativ2();
+            codeProxy();
 
         }
 
-        public static void alternativ2()
+        public static void codeProxy()
         {
 
             var client = Proxy.GetClient();
@@ -47,7 +47,7 @@ namespace TestKlient
         }
 
 
-        public static  void alternativ1()
+        public static  void configProxy()
         {
 
             var proxyClient = new oppslagstjeneste1602Client("oppslagstjeneste_ver2_v6");
