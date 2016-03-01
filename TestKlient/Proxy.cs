@@ -73,10 +73,6 @@ namespace TestKlient
             tmee.ReaderQuotas.MaxArrayLength = 16384;
             tmee.ReaderQuotas.MaxBytesPerRead = 4096;
             tmee.ReaderQuotas.MaxNameTableCharCount = 16384;
-
-            var tmebe = new MyMessageEncodingBindingElement();
-            tmebe.MessageVersion = MessageVersion.Soap12;
-            
             
             var htbe = new HttpsTransportBindingElement();
             htbe.RequireClientCertificate = true;
@@ -86,7 +82,7 @@ namespace TestKlient
 
             var binding = new CustomBinding();
             binding.Elements.Add(securityElementMutualBinding);
-            binding.Elements.Add(tmebe);
+            binding.Elements.Add(tmee);
             binding.Elements.Add(htbe);
             return new CustomBinding(binding);
         }
