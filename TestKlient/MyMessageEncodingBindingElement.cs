@@ -141,8 +141,8 @@ namespace TestKlient
                // XmlNode security = xmlDoc.SelectSingleNode("//*[local-name()='Security']");
 
                 XmlNode timestamp = xmlDoc.SelectSingleNode("//*[local-name()='Timestamp']");
-                referenceList.Add(timestamp.Attributes["wsu:Id"].Value);
-                timestamp.ParentNode.RemoveChild(timestamp);
+                //referenceList.Add(timestamp.Attributes["wsu:Id"].Value);
+                //timestamp.ParentNode.RemoveChild(timestamp);
 
                 XmlNode signatureConfirmation = xmlDoc.SelectSingleNode("//*[local-name()='SignatureConfirmation']");
                 referenceList.Add(signatureConfirmation.Attributes["wsu:Id"].Value);

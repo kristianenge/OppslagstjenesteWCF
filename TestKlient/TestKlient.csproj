@@ -58,12 +58,9 @@
     <Compile Include="InspectorBehavior.cs" />
     <Compile Include="MyMessageEncodingBindingElement.cs" />
     <Compile Include="MyMessageInspector.cs" />
-    <Compile Include="Navnerom.cs" />
-    <Compile Include="Oppslagstjenestevalidator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxy.cs" />
-    <Compile Include="Responsevalidator.cs" />
     <Compile Include="XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
