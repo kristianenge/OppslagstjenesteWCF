@@ -18,3 +18,5 @@ C:\Users\krist\Documents\GitHub\OppslagstjenesteWCF\TestKlient\bin\Debug\Oppslag
 C:\Users\krist\Documents\GitHub\OppslagstjenesteWCF\TestKlient\obj\Debug\TestKlient.csprojResolveAssemblyReference.cache
 C:\Users\krist\Documents\GitHub\OppslagstjenesteWCF\TestKlient\bin\Debug\Difi.Felles.Utility.dll
 C:\Users\krist\Documents\GitHub\OppslagstjenesteWCF\TestKlient\bin\Debug\Difi.Felles.Utility.xml
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\bin\Debug\Difi.Felles.Utility.dll
+Z:\Development\Oppslagstjeneste\OppslagstjenesteWsdl\TestKlient\bin\Debug\Difi.Felles.Utility.xml

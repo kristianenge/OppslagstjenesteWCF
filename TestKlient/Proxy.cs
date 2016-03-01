@@ -58,7 +58,7 @@ namespace TestKlient
             asbe.MessageSecurityVersion = MessageSecurityVersion
                 .WSSecurity10WSTrustFebruary2005WSSecureConversationFebruary2005WSSecurityPolicy11BasicSecurityProfile10;
             asbe.DefaultAlgorithmSuite = SecurityAlgorithmSuite.Basic256Sha256;
-            asbe.IncludeTimestamp = false;
+            asbe.IncludeTimestamp = true;
             asbe.KeyEntropyMode = SecurityKeyEntropyMode.CombinedEntropy;
             asbe.SecurityHeaderLayout = SecurityHeaderLayout.Lax;
             asbe.RequireSignatureConfirmation = false;
@@ -67,15 +67,13 @@ namespace TestKlient
             
 
             var securityElementMutualBinding =
-                (AsymmetricSecurityBindingElement)SecurityBindingElement.CreateMutualCertificateBindingElement(
+                SecurityBindingElement.CreateMutualCertificateBindingElement(
                     MessageSecurityVersion
                         .WSSecurity10WSTrustFebruary2005WSSecureConversationFebruary2005WSSecurityPolicy11BasicSecurityProfile10);
             securityElementMutualBinding.DefaultAlgorithmSuite = SecurityAlgorithmSuite.Basic256Sha256;
-            securityElementMutualBinding.AllowSerializedSigningTokenOnReply = true;
-            securityElementMutualBinding.MessageProtectionOrder = MessageProtectionOrder.SignBeforeEncryptAndEncryptSignature;
-            securityElementMutualBinding.RequireSignatureConfirmation = true;
-            securityElementMutualBinding.IncludeTimestamp = true;
-            asbe.SecurityHeaderLayout = SecurityHeaderLayout.Lax;
+            ((AsymmetricSecurityBindingElement) securityElementMutualBinding).AllowSerializedSigningTokenOnReply = true;
+            ((AsymmetricSecurityBindingElement) securityElementMutualBinding).MessageProtectionOrder = MessageProtectionOrder.SignBeforeEncrypt;
+            
 
             var tmee = new TextMessageEncodingBindingElement();
             tmee.MaxReadPoolSize = 64;
@@ -92,8 +90,6 @@ namespace TestKlient
             tmebe.MessageVersion = MessageVersion.Soap12;
             
             
-
-
             var htbe = new HttpsTransportBindingElement();
             htbe.RequireClientCertificate = true;
             htbe.MaxBufferPoolSize = 524288;

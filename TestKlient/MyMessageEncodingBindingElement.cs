@@ -98,47 +98,7 @@ namespace TestKlient
             {
                 
                 var s = ProcessMemoryStream(stream);
-                string fasit;
-                string kanin;
-                
-                StreamReader sr = new StreamReader(stream);
-                
-                //This allows you to do one Read operation.
-                fasit = sr.ReadToEnd();
-                stream.Position = 0;
-               
-
-                var xmldoc = new XmlDocument();
-                xmldoc.PreserveWhitespace = true;
-                xmldoc.Load(stream);
-                MemoryStream xmlStream = new MemoryStream();
-                xmldoc.Save(xmlStream);
-
-                xmlStream.Flush();//Adjust this if you want read your data 
-                xmlStream.Position = 0;
-
-                var candidate = "";
-                using (StreamReader sr2 = new StreamReader(xmlStream))
-                {
-                    //This allows you to do one Read operation.
-                    candidate = sr2.ReadToEnd();
-                }
-                
-                candidate = Regex.Replace(candidate, @" />", "/>");
-
-                MemoryStream editedStream = new MemoryStream();
-                StreamWriter writer = new StreamWriter(editedStream);
-                writer.Write(candidate);
-                writer.Flush();
-                editedStream.Position = 0;
-                
-
-                //XmlDocument sendtDokument, XmlDocument mottattDokument, SoapVersion version, X509Certificate2 xmlDekrypteringsSertifikat = null)
-                // var sertifikat = ApiClientShared.CertificateUtility.SenderCertificate("8702F5E55217EC88CF2CCBADAC290BB4312594AC", Language.Norwegian);
-                // var rv = new Oppslagstjenestevalidator(null,xmldoc, sertifikat);
-                // rv.Valider();
-                //var signedXmlWithAgnosticId = new SignedXmlWithAgnosticId(xmldoc);
-
+              
                 return this._text.ReadMessage(s, maxSizeOfHeaders, contentType);
             }
 
@@ -170,7 +130,7 @@ namespace TestKlient
 
             private Stream ProcessMemoryStream(Stream inputStream)
             {
-                List<string> referenceList = new List<string>();// findReferenceId(inputStream);
+                List<string> referenceList = new List<string>();
 
                 var xmlDoc = new XmlDocument();
                 xmlDoc.PreserveWhitespace = true;
@@ -178,13 +138,13 @@ namespace TestKlient
                 inputStream.Position = 0;
                 
 
-               // XmlNode security = xmlDoc.SelectSingleNode("//*[local-name()='Security']"); // apply your xpath here
+               // XmlNode security = xmlDoc.SelectSingleNode("//*[local-name()='Security']");
 
-                XmlNode timestamp = xmlDoc.SelectSingleNode("//*[local-name()='Timestamp']"); // apply your xpath here
+                XmlNode timestamp = xmlDoc.SelectSingleNode("//*[local-name()='Timestamp']");
                // referenceList.Add(timestamp.Attributes["wsu:Id"].Value);
-                // timestamp.ParentNode.RemoveChild(timestamp);
+               // timestamp.ParentNode.RemoveChild(timestamp);
 
-                XmlNode signatureConfirmation = xmlDoc.SelectSingleNode("//*[local-name()='SignatureConfirmation']"); // apply your xpath here
+                XmlNode signatureConfirmation = xmlDoc.SelectSingleNode("//*[local-name()='SignatureConfirmation']");
                // referenceList.Add(signatureConfirmation.Attributes["wsu:Id"].Value);
                // signatureConfirmation.ParentNode.RemoveChild(signatureConfirmation);
 
@@ -197,11 +157,9 @@ namespace TestKlient
             
                 string raw = xmlDoc.OuterXml;
                 raw = Regex.Replace(raw, @" />", "/>");
-             //   raw = Regex.Replace(raw, @"></wsse11:SignatureConfirmation>", "/>");
 
                 MemoryStream xmlStream = new MemoryStream();
                 xmlDoc.Save(xmlStream);
-
                 xmlStream.Flush();//Adjust this if you want read your data 
                 xmlStream.Position = 0;
 
