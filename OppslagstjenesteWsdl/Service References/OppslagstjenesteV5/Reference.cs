@@ -12,8 +12,8 @@ namespace OppslagstjenesteWsdl.OppslagstjenesteV5 {
 
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-/*    [System.ServiceModel.ServiceContractAttribute(Name="oppslagstjeneste-16-02", Namespace="http://kontaktinfo.difi.no/wsdl/oppslagstjeneste-16-02", ConfigurationName="OppslagstjenesteV5.oppslagstjeneste1602", ProtectionLevel = System.Net.Security.ProtectionLevel.Sign)]*/
-    [System.ServiceModel.ServiceContractAttribute(Name = "oppslagstjeneste-16-02", Namespace = "http://kontaktinfo.difi.no/wsdl/oppslagstjeneste-16-02", ConfigurationName = "OppslagstjenesteV5.oppslagstjeneste1602")]
+    [System.ServiceModel.ServiceContractAttribute(Name="oppslagstjeneste-16-02", Namespace="http://kontaktinfo.difi.no/wsdl/oppslagstjeneste-16-02", ConfigurationName="OppslagstjenesteV5.oppslagstjeneste1602", ProtectionLevel = System.Net.Security.ProtectionLevel.Sign)]
+    /*[System.ServiceModel.ServiceContractAttribute(Name = "oppslagstjeneste-16-02", Namespace = "http://kontaktinfo.difi.no/wsdl/oppslagstjeneste-16-02", ConfigurationName = "OppslagstjenesteV5.oppslagstjeneste1602")]*/
     public interface oppslagstjeneste1602 {
         
         [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]

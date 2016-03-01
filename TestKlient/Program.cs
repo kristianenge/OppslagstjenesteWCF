@@ -22,7 +22,7 @@ namespace TestKlient
         static void Main(string[] args)
 
         {
-                
+            configProxy();
             codeProxy();
 
         }
