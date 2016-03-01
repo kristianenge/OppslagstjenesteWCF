@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://begrep.difi.no" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://begrep.difi.no" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:annotation>
+    <xs:appinfo>Metadata for Oppslagstjenesten</xs:appinfo>
+    <xs:documentation xml:lang="nb">Definisjon av XML-typer benyttet i webtjeneste-grensesnitt.</xs:documentation>
+  </xs:annotation>
+  <xs:element name="Person" type="tns:Person" />
+  <xs:complexType name="Person">
+    <xs:sequence>
+      <xs:element name="personidentifikator" type="tns:personidentifikator" />
+      <xs:element minOccurs="0" name="reservasjon" type="tns:reservasjon" />
+      <xs:element minOccurs="0" name="status" type="tns:status" />
+      <xs:element minOccurs="0" name="varslingsstatus" type="tns:varslingsstatus" />
+      <xs:element minOccurs="0" name="Kontaktinformasjon" type="tns:Kontaktinformasjon" />
+      <xs:element minOccurs="0" name="SikkerDigitalPostAdresse" type="tns:SikkerDigitalPostAdresse" />
+      <xs:element minOccurs="0" maxOccurs="1" name="X509Sertifikat" type="tns:X509Sertifikat" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="X509Sertifikat">
+    <xs:restriction base="xs:base64Binary" />
+  </xs:simpleType>
+  <xs:simpleType name="personidentifikator">
+    <xs:restriction base="xs:string">
+      <xs:length value="11" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="varslingsstatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="KAN_IKKE_VARSLES" />
+      <xs:enumeration value="KAN_VARSLES" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="status">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AKTIV" />
+      <xs:enumeration value="SLETTET" />
+      <xs:enumeration value="IKKE_REGISTRERT" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="postkasseleverandoerOrgNummer">
+    <xs:restriction base="xs:string" />
+  </xs:simpleType>
+  <xs:simpleType name="reservasjon">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="JA" />
+      <xs:enumeration value="NEI" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Kontaktinformasjon">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Mobiltelefonnummer" type="tns:Mobiltelefonnummer" />
+      <xs:element minOccurs="0" name="Epostadresse" type="tns:Epostadresse" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SikkerDigitalPostAdresse">
+    <xs:sequence>
+      <xs:element name="postkasseadresse" type="tns:postkasseadresse" />
+      <xs:element name="postkasseleverandoerAdresse" type="tns:postkasseleverandoerAdresse" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="postkasseadresse">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="8" />
+      <xs:maxLength value="100" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="postkasseleverandoerAdresse">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="8" />
+      <xs:maxLength value="20" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Epostadresse">
+    <xs:simpleContent>
+      <xs:extension base="tns:epostadresse">
+        <xs:attribute name="sistOppdatert" type="xs:dateTime" use="optional" />
+        <xs:attribute name="sistVerifisert" type="xs:dateTime" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="mobiltelefonnummer">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="8" />
+      <xs:maxLength value="20" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="epostadresse">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="3" />
+      <xs:maxLength value="50" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Mobiltelefonnummer">
+    <xs:simpleContent>
+      <xs:extension base="tns:mobiltelefonnummer">
+        <xs:attribute name="sistOppdatert" type="xs:dateTime" use="optional" />
+        <xs:attribute name="sistVerifisert" type="xs:dateTime" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>
